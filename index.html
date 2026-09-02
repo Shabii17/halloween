@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An Invitation</title>
+
+<!--
+  ============================================================
+  EDIT YOUR PARTY DETAILS
+  Scroll down to the "CONFIG" object inside the <script> tag
+  near the bottom of this file. Every field is labeled.
+  You do NOT need to touch anything else in this document.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0a0908;
+    --ink-2:#141110;
+    --panel:#1c1512;
+    --wine:#4a1220;
+    --wine-deep:#210910;
+    --gold:#b8945a;
+    --gold-2:#e6c98c;
+    --gold-dim:#7d6440;
+    --bone:#ece3d2;
+    --bone-dim:#b9ac93;
+    --line: rgba(184,148,90,0.35);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--bone);
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3, .display{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    margin:0;
+    color:var(--bone);
+  }
+
+  a{ color:inherit; }
+
+  ::selection{ background:var(--wine); color:var(--gold-2); }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:1px solid var(--gold-2);
+    outline-offset:4px;
+  }
+
+  /* ---------- ambient embers ---------- */
+  #embers{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1;
+    overflow:hidden;
+  }
+  .ember{
+    position:absolute;
+    bottom:-10px;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:radial-gradient(circle, var(--gold-2), var(--gold) 60%, transparent 70%);
+    opacity:0;
+    animation-name: rise;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+  }
+  @keyframes rise{
+    0%{ transform:translateY(0) translateX(0); opacity:0; }
+    8%{ opacity:.7; }
+    92%{ opacity:.35; }
+    100%{ transform:translateY(-105vh) translateX(var(--drift,20px)); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .ember{ animation:none; display:none; }
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+
+  /* ---------- layout shell ---------- */
+  main{
+    position:relative;
+    z-index:2;
+  }
+
+  section{
+    padding:min(14vw,7rem) 1.5rem;
+    max-width:760px;
+    margin:0 auto;
+  }
+
+  .center{ text-align:center; }
+
+  /* ---------- ornamental divider ---------- */
+  .divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:1rem;
+    margin: 2.75rem auto;
+    max-width:340px;
+    opacity:0;
+    animation: fadeIn 1.2s ease forwards;
+  }
+  .divider .rule{
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+  .divider svg{ flex-shrink:0; }
+
+  @keyframes fadeIn{ to{ opacity:1; } }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    position:relative;
+    padding:6rem 1.5rem 4rem;
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 8%, rgba(74,18,32,0.55), transparent 60%),
+      radial-gradient(ellipse 120% 70% at 50% 100%, rgba(33,9,16,0.9), transparent 60%),
+      var(--ink);
+  }
+
+  .hero-frame{
+    opacity:0;
+    animation: reveal 1.4s cubic-bezier(.16,1,.3,1) .2s forwards;
+  }
+  @keyframes reveal{
+    from{ opacity:0; transform:translateY(18px) scale(.985); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  .moon{ margin-bottom:1.75rem; }
+
+  .kicker{
+    font-family:'Jost', sans-serif;
+    font-weight:400;
+    font-size:.82rem;
+    letter-spacing:.18em;
+    color:var(--gold);
+    margin-bottom:1.1rem;
+  }
+
+  .hero h1{
+    font-size:clamp(2.6rem, 8vw, 4.6rem);
+    letter-spacing:.01em;
+    font-style:italic;
+    font-weight:500;
+    color:var(--bone);
+    text-shadow: 0 0 40px rgba(184,148,90,0.18);
+  }
+
+  .hero .subline{
+    margin-top:1.35rem;
+    font-size:1.05rem;
+    color:var(--bone-dim);
+    max-width:30ch;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .hero .host-line{
+    margin-top:2.5rem;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.2rem;
+    color:var(--gold-2);
+  }
+
+  .date-block{
+    margin-top:2.75rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.35rem;
+  }
+  .date-block .day{
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(1.6rem,4vw,2.1rem);
+    letter-spacing:.03em;
+  }
+  .date-block .countdown{
+    font-size:.78rem;
+    letter-spacing:.12em;
+    color:var(--bone-dim);
+  }
+
+  .scroll-cue{
+    margin-top:3.5rem;
+    font-size:.72rem;
+    letter-spacing:.15em;
+    color:var(--gold-dim);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.5rem;
+  }
+  .scroll-cue .stem{
+    width:1px; height:34px;
+    background:linear-gradient(var(--gold-dim), transparent);
+    animation: stretch 2.4s ease-in-out infinite;
+  }
+  @keyframes stretch{
+    0%,100%{ transform:scaleY(.8); opacity:.5; }
+    50%{ transform:scaleY(1); opacity:1; }
+  }
+
+  /* ---------- panel (invitation card) ---------- */
+  .panel{
+    position:relative;
+    border:1px solid var(--line);
+    padding:min(9vw,3.2rem) min(8vw,3rem);
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent 40%);
+  }
+  .panel::before, .panel::after{
+    content:"";
+    position:absolute;
+    width:26px; height:26px;
+    border:1px solid var(--gold-dim);
+  }
+  .panel::before{ top:-1px; left:-1px; border-right:none; border-bottom:none; }
+  .panel::after{ bottom:-1px; right:-1px; border-left:none; border-top:none; }
+
+  .eyebrow-quiet{
+    font-size:.8rem;
+    color:var(--gold);
+    letter-spacing:.06em;
+    margin-bottom:.6rem;
+  }
+
+  section h2{
+    font-size:clamp(1.9rem,4.5vw,2.5rem);
+    font-style:italic;
+    margin-bottom:1.1rem;
+  }
+
+  .lede{
+    color:var(--bone-dim);
+    max-width:52ch;
+    margin:0 auto 2.4rem;
+  }
+
+  /* particulars list */
+  .particulars{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:1.6rem;
+    text-align:left;
+    max-width:480px;
+    margin:0 auto;
+  }
+  .particular{
+    display:grid;
+    grid-template-columns:110px 1fr;
+    gap:1.2rem;
+    padding-bottom:1.5rem;
+    border-bottom:1px solid rgba(184,148,90,0.15);
+  }
+  .particular:last-child{ border-bottom:none; padding-bottom:0; }
+  .particular .label{
+    font-size:.8rem;
+    letter-spacing:.06em;
+    color:var(--gold);
+    padding-top:.2rem;
+  }
+  .particular .value{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.35rem;
+    color:var(--bone);
+  }
+  .particular .value small{
+    display:block;
+    font-family:'Jost', sans-serif;
+    font-size:.85rem;
+    color:var(--bone-dim);
+    margin-top:.3rem;
+  }
+
+  @media (max-width:480px){
+    .particular{ grid-template-columns:1fr; gap:.3rem; }
+  }
+
+  /* dress code */
+  .dress-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.6rem;
+    justify-content:center;
+    margin-top:1.6rem;
+  }
+  .tag{
+    border:1px solid var(--gold-dim);
+    color:var(--gold-2);
+    padding:.5rem 1.1rem;
+    font-size:.82rem;
+    letter-spacing:.04em;
+    border-radius:2px;
+  }
+
+  /* seal / monogram */
+  .seal{
+    width:74px; height:74px;
+    border-radius:50%;
+    margin:0 auto 1.6rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:radial-gradient(circle at 35% 30%, var(--wine) 0%, var(--wine-deep) 70%);
+    border:1px solid var(--gold-dim);
+    box-shadow:0 0 0 5px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .seal span{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.7rem;
+    color:var(--gold-2);
+  }
+
+  /* ---------- invitation card ---------- */
+  .invite-card{
+    position:relative;
+    border:1px solid var(--gold-dim);
+    padding:10px;
+    max-width:520px;
+    margin:0 auto;
+    background:linear-gradient(180deg, rgba(184,148,90,0.05), transparent 50%);
+  }
+  .invite-card-inner{
+    border:1px solid var(--line);
+    padding:min(10vw,3.4rem) min(7vw,2.6rem);
+    position:relative;
+  }
+  .invite-card-inner::before, .invite-card-inner::after{
+    content:"";
+    position:absolute;
+    width:22px; height:22px;
+    border:1px solid var(--gold);
+  }
+  .invite-card-inner::before{ top:8px; left:8px; border-right:none; border-bottom:none; }
+  .invite-card-inner::after{ bottom:8px; right:8px; border-left:none; border-top:none; }
+
+  .invite-request{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.35rem;
+    color:var(--bone);
+    max-width:26ch;
+    margin:0 auto 1rem;
+  }
+  .invite-occasion{
+    color:var(--bone-dim);
+    font-size:.98rem;
+    max-width:30ch;
+    margin:0 auto;
+  }
+  .invite-when{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.3rem;
+    color:var(--gold-2);
+    margin-top:.4rem;
+  }
+  .invite-where{
+    color:var(--bone-dim);
+    font-size:.95rem;
+    margin-top:.2rem;
+  }
+  .invite-rsvp{
+    margin-top:1.8rem;
+    font-size:.85rem;
+    color:var(--bone-dim);
+    letter-spacing:.02em;
+  }
+  .invite-rsvp span{ color:var(--gold); }
+
+  /* footer */
+  footer{
+    text-align:center;
+    padding:4rem 1.5rem 5rem;
+    color:var(--bone-dim);
+    font-size:.85rem;
+  }
+  footer .fmoon{ margin-bottom:1rem; opacity:.8; }
+  footer .closing{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.2rem;
+    color:var(--bone);
+    margin-bottom:.8rem;
+  }
+</style>
+</head>
+<body>
+
+<div id="embers" aria-hidden="true"></div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-frame">
+      <div class="moon" aria-hidden="true">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+          <path d="M44 12C33 14 25 24 25 36C25 48 33 58 44 60C31 63 18 54 15 40C12 25 22 11 37 9C40 8.5 42.5 9.5 44 12Z"
+            stroke="#b8945a" stroke-width="1" fill="rgba(184,148,90,0.06)"/>
+          <path d="M18 20C18 20 10 26 8 36M56 20C56 20 64 26 66 36" stroke="#7d6440" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="10" cy="46" r="1.4" fill="#b8945a"/>
+          <circle cx="63" cy="44" r="1" fill="#b8945a"/>
+        </svg>
+      </div>
+
+      <p class="kicker" id="f-kicker">on the occasion of all hallows' eve</p>
+      <h1 id="f-eventName">The Hollow&nbsp;Hour</h1>
+      <p class="subline" id="f-tagline">an evening of masks, candlelight, and quiet mischief</p>
+
+      <p class="host-line"><span id="f-hostPrefix">hosted by</span> <span id="f-hostName">Evelyn&nbsp;Ashworth</span></p>
+
+      <div class="date-block">
+        <div class="day" id="f-dateDisplay">Friday, the 31st of October</div>
+        <div class="countdown" id="f-countdown"></div>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true">
+        <span>the particulars</span>
+        <span class="stem"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PARTICULARS ============ -->
+  <section id="details">
+    <div class="panel">
+      <div class="center">
+        <p class="eyebrow-quiet">you are cordially invited</p>
+        <h2>Please, do come.</h2>
+        <p class="lede" id="f-invite-copy">
+          Kindly join us for an evening set aside from the ordinary hours —
+          a gathering of old friends, new masks, and one very good reason
+          to wear black.
+        </p>
+      </div>
+
+      <div class="divider" aria-hidden="true">
+        <span class="rule"></span>
+        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 0L9 5L14 7L9 9L7 14L5 9L0 7L5 5Z" fill="#b8945a" opacity="0.8"/></svg>
+        <span class="rule"></span>
+      </div>
+
+      <div class="particulars">
+        <div class="particular">
+          <div class="label">Date</div>
+          <div class="value" id="f-date">Friday, October 31st</div>
+        </div>
+        <div class="particular">
+          <div class="label">Time</div>
+          <div class="value" id="f-time">9:00 in the evening, until the small hours</div>
+        </div>
+        <div class="particular">
+          <div class="label">Venue</div>
+          <div class="value">
+            <span id="f-venueName">The Ashworth Estate</span>
+            <small id="f-venueAddress">14 Rosemary Lane, Blackwood Hollow</small>
+          </div>
+        </div>
+        <div class="particular">
+          <div class="label">Attire</div>
+          <div class="value" id="f-dressHeadline">Black tie, with masks encouraged</div>
+        </div>
+      </div>
+
+      <div class="dress-row" id="f-dressTags" aria-hidden="true">
+        <span class="tag">Formal black</span>
+        <span class="tag">Masks encouraged</span>
+        <span class="tag">A touch of the macabre</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       INVITATION CARD — this whole block is safe to leave alone.
+       All of its wording is filled in from CONFIG.invitationCard
+       further down in the <script> tag. Edit the text there, not here.
+       ============================================================ -->
+  <section id="invite" class="center">
+    <div class="invite-card">
+      <div class="invite-card-inner">
+        <div class="seal" aria-hidden="true"><span id="f-sealLetter">E</span></div>
+
+        <p class="eyebrow-quiet" id="f-card-eyebrow">the invitation</p>
+
+        <p class="invite-request" id="f-card-request">
+          Evelyn Ashworth requests the pleasure of your company
+        </p>
+
+        <p class="invite-occasion" id="f-card-occasion">
+          for an evening of masks and mischief,<br>in celebration of All Hallows' Eve
+        </p>
+
+        <div class="divider" aria-hidden="true">
+          <span class="rule"></span>
+          <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 0L9 5L14 7L9 9L7 14L5 9L0 7L5 5Z" fill="#b8945a" opacity="0.8"/></svg>
+          <span class="rule"></span>
+        </div>
+
+        <p class="invite-when" id="f-card-when">
+          Friday, October 31st &middot; 9:00 in the evening
+        </p>
+        <p class="invite-where" id="f-card-where">
+          The Ashworth Estate, 14 Rosemary Lane
+        </p>
+
+        <p class="invite-rsvp" id="f-card-rsvp">
+          The favour of a reply is requested by October 20th<br>
+          <span id="f-card-contact">hello@ashworthestate.example</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="fmoon" aria-hidden="true">
+      <svg width="30" height="30" viewBox="0 0 72 72" fill="none">
+        <path d="M44 12C33 14 25 24 25 36C25 48 33 58 44 60C31 63 18 54 15 40C12 25 22 11 37 9C40 8.5 42.5 9.5 44 12Z"
+          stroke="#7d6440" stroke-width="1.4" fill="none"/>
+      </svg>
+    </div>
+    <p class="closing" id="f-closing">Until the veil thins.</p>
+    <p id="f-footerContact">Questions? Write to hello@ashworthestate.example</p>
+  </footer>
+
+</main>
+
+<script>
+/* ============================================================
+   CONFIG — EDIT YOUR PARTY DETAILS HERE
+   Change only the text between the quotes on the right.
+   Everything on the page updates automatically.
+   ============================================================ */
+const CONFIG = {
+  // Small line above the title
+  kicker: "on the occasion of all hallows' eve",
+
+  // Main event name (the big italic headline)
+  eventName: "The Hollow Hour",
+
+  // Short line under the title
+  tagline: "an evening of masks, candlelight, and quiet mischief",
+
+  // Host
+  hostPrefix: "hosted by",
+  hostName: "Evelyn Ashworth",
+
+  // Date shown big in the hero (just for display)
+  dateDisplay: "Friday, the 31st of October",
+
+  // Real date used to calculate the countdown line — format: YYYY-MM-DDTHH:MM
+  eventDateISO: "2026-10-31T21:00:00",
+
+  // Particulars section
+  inviteCopy: "Kindly join us for an evening set aside from the ordinary hours — a gathering of old friends, new masks, and one very good reason to wear black.",
+  date: "Friday, October 31st",
+  time: "9:00 in the evening, until the small hours",
+  venueName: "The Ashworth Estate",
+  venueAddress: "14 Rosemary Lane, Blackwood Hollow",
+  dressHeadline: "Black tie, with masks encouraged",
+  dressTags: ["Formal black", "Masks encouraged", "A touch of the macabre"],
+
+  // ============ INVITATION CARD — edit this block freely ============
+  invitationCard: {
+    eyebrow: "the invitation",
+    // The formal request line. Traditionally starts with the host's name.
+    request: "Evelyn Ashworth requests the pleasure of your company",
+    // The reason for gathering. Use <br> for a manual line break.
+    occasion: "for an evening of masks and mischief,<br>in celebration of All Hallows' Eve",
+    // Date + time, shown together on one line
+    when: "Friday, October 31st &middot; 9:00 in the evening",
+    // Venue, shown on the line below
+    where: "The Ashworth Estate, 14 Rosemary Lane",
+    // RSVP deadline + contact (email, phone, or a website — any text works)
+    rsvpBy: "October 20th",
+    contact: "hello@ashworthestate.example"
+  },
+  // ============ END INVITATION CARD ============
+
+  // Footer
+  closing: "Until the veil thins.",
+  footerContact: "Questions? Write to hello@ashworthestate.example"
+};
+/* ============================================================
+   END OF CONFIG — no need to edit anything below this line
+   ============================================================ */
+
+function setText(id, value){
+  const el = document.getElementById(id);
+  if(el) el.textContent = value;
+}
+
+setText('f-kicker', CONFIG.kicker);
+setText('f-eventName', CONFIG.eventName);
+setText('f-tagline', CONFIG.tagline);
+setText('f-hostPrefix', CONFIG.hostPrefix);
+setText('f-hostName', CONFIG.hostName);
+setText('f-dateDisplay', CONFIG.dateDisplay);
+setText('f-invite-copy', CONFIG.inviteCopy);
+setText('f-date', CONFIG.date);
+setText('f-time', CONFIG.time);
+setText('f-venueName', CONFIG.venueName);
+setText('f-venueAddress', CONFIG.venueAddress);
+setText('f-dressHeadline', CONFIG.dressHeadline);
+setText('f-closing', CONFIG.closing);
+setText('f-footerContact', CONFIG.footerContact);
+setText('f-sealLetter', (CONFIG.hostName || 'A').trim().charAt(0).toUpperCase());
+document.title = CONFIG.eventName + " — Invitation";
+
+// invitation card (supports simple HTML like <br> in occasion/when)
+function setHTML(id, value){
+  const el = document.getElementById(id);
+  if(el) el.innerHTML = value;
+}
+const card = CONFIG.invitationCard || {};
+setText('f-card-eyebrow', card.eyebrow);
+setText('f-card-request', card.request);
+setHTML('f-card-occasion', card.occasion);
+setHTML('f-card-when', card.when);
+setText('f-card-where', card.where);
+setHTML('f-card-rsvp', 'The favour of a reply is requested by ' + card.rsvpBy + '<br><span id="f-card-contact">' + card.contact + '</span>');
+
+// dress tags
+const tagWrap = document.getElementById('f-dressTags');
+if(tagWrap && CONFIG.dressTags){
+  tagWrap.innerHTML = '';
+  CONFIG.dressTags.forEach(t=>{
+    const s = document.createElement('span');
+    s.className = 'tag';
+    s.textContent = t;
+    tagWrap.appendChild(s);
+  });
+}
+
+// countdown
+(function countdown(){
+  const el = document.getElementById('f-countdown');
+  if(!el) return;
+  const target = new Date(CONFIG.eventDateISO);
+  const now = new Date();
+  const diffMs = target - now;
+  if(isNaN(target)){ el.textContent = ''; return; }
+  if(diffMs <= 0){ el.textContent = 'the night has arrived'; return; }
+  const days = Math.ceil(diffMs / (1000*60*60*24));
+  el.textContent = days === 1 ? 'one night remains' : days + ' nights remain';
+})();
+
+// ambient embers
+(function embers(){
+  const wrap = document.getElementById('embers');
+  if(!wrap) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  const count = window.innerWidth < 600 ? 10 : 18;
+  for(let i=0;i<count;i++){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const left = Math.random()*100;
+    const dur = 9 + Math.random()*10;
+    const delay = Math.random()*14;
+    const drift = (Math.random()*60-30) + 'px';
+    e.style.left = left + 'vw';
+    e.style.setProperty('--drift', drift);
+    e.style.animationDuration = dur + 's';
+    e.style.animationDelay = delay + 's';
+    wrap.appendChild(e);
+  }
+})();
+</script>
+
+</body>
+</html>
